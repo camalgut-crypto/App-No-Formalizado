@@ -1,0 +1,19 @@
+# Configuración del proceso de carga de App No Formalizado (sin secretos).
+# Las credenciales SQL son las mismas de Loan Tape / Módulo de Garantías (Administrador de credenciales de Windows).
+
+[servidor]
+server = 'SRV-TORTUGUERO\DATAWAREHOUSE'   # comillas simples: la barra invertida se toma literal
+database = "GENESIS_REGIONAL"
+driver = "ODBC Driver 18 for SQL Server"   # si no está instalado se usa el más nuevo disponible
+servicio_credenciales = "modulo_garantias_sql"
+
+[consultas]
+base = "app no formalizada.sql"            # la consulta del usuario, se lee tal cual (no modificar desde aquí)
+estado_actual = "worker/sql/estado_actual.sql"
+
+[supabase]
+# Proyecto de Telemercadeo (el mismo del CRM); las tablas de esta app llevan el prefijo nf_
+url = "https://osigpjjokeecfihcyzxk.supabase.co"
+anon_key = "sb_publishable_BvyeNi_H2exf_mWMPpl7mA_gwShSQfE"
+usuario = "nf.sistema"                     # perfil sistema; contraseña en keyring (la guarda worker/instalar.py)
+servicio_credenciales = "app_no_formalizado_supabase"

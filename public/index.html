@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>App No Formalizado</title>
+  <link rel="icon" href="img/isotipo_full.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=2026103001">
+</head>
+<body>
+  <div id="login" class="login" hidden>
+    <div class="lado">
+      <img class="logo" src="img/logo_claro.png" alt="Instacredit">
+      <div>
+        <h1>App No <span>Formalizado</span></h1>
+        <p>Una llamada a tiempo retoma el crédito que el cliente necesita.<br>Solicitudes TUD sin formalizar · Nicaragua</p>
+      </div>
+      <img class="mascota" src="img/prestamito_app_celular.png" alt="">
+    </div>
+    <form id="flog">
+      <h2>¡HOLA! Ingresá</h2>
+      <p class="muted small">Escribí tu usuario tal como te lo entregaron (tu nombre completo, o <b>generico</b> para el perfil de consulta).</p>
+      <label for="lu">Usuario</label><input id="lu" autocomplete="username" required>
+      <label for="lp">Contraseña</label><input id="lp" type="password" autocomplete="current-password" required>
+      <p id="lmsg" class="small error-txt"></p>
+      <button class="btn" style="width:100%">Entrar</button>
+    </form>
+    <form id="fclave" hidden>
+      <h2>Elegí tu contraseña</h2>
+      <p class="muted small">Estás usando una contraseña temporal. Elegí una propia de al menos 8 caracteres para continuar.</p>
+      <label for="cn1">Nueva contraseña</label><input id="cn1" type="password" autocomplete="new-password" required>
+      <label for="cn2">Repetí la nueva contraseña</label><input id="cn2" type="password" autocomplete="new-password" required>
+      <p id="cmsg" class="small error-txt"></p>
+      <button class="btn" style="width:100%">Guardar y entrar</button>
+    </form>
+  </div>
+
+  <div id="app" hidden>
+    <header class="top">
+      <img src="img/logo_claro.png" alt="Instacredit">
+      <div class="tit">App No <span>Formalizado</span></div>
+      <div class="acciones">
+        <span id="ultima" class="small"></span>
+        <span class="yo"><span id="yoNombre"></span> <span class="chip" id="yoRol"></span></span>
+        <button id="btnClave" class="btn sec mini">Cambiar contraseña</button>
+        <button id="btnSalir" class="btn sec mini">Salir</button>
+      </div>
+    </header>
+    <nav class="tabs" id="tabs">
+      <button data-tab="llamadas" class="on">Llamadas <span class="cnt" id="cntLlam"></span></button>
+      <button data-tab="base">Base y segmentación</button>
+      <button data-tab="dashboard">Dashboard</button>
+      <button data-tab="admin" id="tabAdmin" hidden>Administración</button>
+    </nav>
+    <main>
+      <div id="aviso" class="aviso" hidden></div>
+
+      <!-- Llamadas: solo cliente, promotor y teléfono; al abrir, todos los datos y el comentario -->
+      <section id="vLlamadas">
+        <div class="filtros">
+          <label>Buscar <input id="lBuscar" type="search" placeholder="Cliente, cédula, teléfono, promotor o solicitud"></label>
+          <label>Estatus de llamada <select id="lEstatus"></select></label>
+          <label>Promotor <select id="lPromotor"></select></label>
+        </div>
+        <div class="tabla-caja">
+          <table class="llamadas">
+            <thead><tr><th>Cliente</th><th>Promotor</th><th>Teléfono cliente</th></tr></thead>
+            <tbody id="tLlamadas"></tbody>
+          </table>
+          <div id="lVacio" class="vacio" hidden>
+            <img src="img/prestamito_festejando.png" alt="">
+            <p>No hay clientes con estos filtros.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Base y segmentación -->
+      <section id="vBase" hidden>
+        <div class="filtros">
+          <label>Ver <span class="seg" id="bVista">
+            <button type="button" data-v="en" class="on">En la base</button><button type="button" data-v="fuera">Salieron de la base</button>
+          </span></label>
+          <label>Buscar <input id="bBuscar" type="search" placeholder="Cliente, cédula, teléfono, promotor o solicitud"></label>
+          <span id="bFiltro" class="filtro-activo" hidden></span>
+          <button id="btnDescargar" class="btn">Descargar Excel</button>
+        </div>
+        <section class="kpis" id="bKpis"></section>
+        <div class="segmentos" id="bSegmentos"></div>
+        <div class="tabla-caja">
+          <table>
+            <thead id="bHead"></thead>
+            <tbody id="bBody"></tbody>
+          </table>
+          <div id="bVacio" class="vacio" hidden>
+            <img src="img/prestamito_pensando.png" alt="">
+            <p>No hay solicitudes con estos filtros.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboard -->
+      <section id="vDash" hidden>
+        <section class="kpis" id="dKpis"></section>
+        <div class="graficos">
+          <div class="panel">
+            <h3>Evolución de la base</h3>
+            <p class="small muted">Solicitudes en la base en cada carga (11:00 y 15:00).</p>
+            <div id="gEvolucion" class="grafico"></div>
+          </div>
+          <div class="panel">
+            <h3>Entradas y salidas por día</h3>
+            <div class="leyenda" id="gFlujoLeyenda"></div>
+            <div id="gFlujo" class="grafico"></div>
+          </div>
+          <div class="panel">
+            <h3>¿Por qué salieron de la base?</h3>
+            <p class="small muted">Todas las salidas desde la primera carga, según el estado actual en el datawarehouse.</p>
+            <div id="gMotivos"></div>
+          </div>
+          <div class="panel">
+            <h3>Avance de la gestión</h3>
+            <p class="small muted">Estatus de llamada de las solicitudes que están hoy en la base.</p>
+            <div id="gGestion"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Detalle por carga</h3>
+          <div class="tabla-caja corta">
+            <table>
+              <thead><tr><th>Carga</th><th class="num">En base</th><th class="num">Nuevas</th><th class="num">Reingresos</th><th class="num">Salidas</th><th class="num">Formalizaron</th></tr></thead>
+              <tbody id="dCargas"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Administración -->
+      <section id="vAdmin" hidden>
+        <div class="panel">
+          <h3>Nuevo usuario</h3>
+          <form id="fnuevo" class="filtros">
+            <label>Nombre completo <input id="nNombre" required placeholder="Nombre Apellido Apellido"></label>
+            <label>Perfil <select id="nRol"><option value="generico">Genérico (consulta)</option><option value="admin">Administrador</option></select></label>
+            <button class="btn">Crear usuario</button>
+          </form>
+          <p class="small muted">El usuario ingresa con su nombre completo y una contraseña temporal que se muestra al crearlo; la primera vez la app le pide cambiarla.
+            El perfil <b>Genérico</b> ve la base, su segmentación, el estatus y el dashboard; solo el <b>Administrador</b> registra llamadas y comentarios.</p>
+        </div>
+        <div class="tabla-caja">
+          <table>
+            <thead><tr><th>Usuario</th><th>Nombre</th><th>Perfil</th><th>Activo</th><th></th></tr></thead>
+            <tbody id="tUsuarios"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Detalle de la solicitud -->
+  <div id="modal" class="modal" hidden>
+    <div class="caja" role="dialog" aria-modal="true" aria-labelledby="mCliente">
+      <header>
+        <div>
+          <div class="kicker" id="mKicker"></div>
+          <h2 id="mCliente"></h2>
+        </div>
+        <button class="cerrar" id="mCerrar" aria-label="Cerrar">×</button>
+      </header>
+      <div class="cuerpo">
+        <a id="mLlamar" class="llamar" href="#"></a>
+        <dl class="datos" id="mDatos"></dl>
+        <div class="gestion">
+          <h3>Gestión de la llamada</h3>
+          <form id="fGestion">
+            <label for="gEstatus">Estatus de llamada</label>
+            <select id="gEstatus" required></select>
+            <label for="gComentario">Comentario</label>
+            <textarea id="gComentario" rows="4" placeholder="¿Qué dijo el cliente? ¿Cuál es el siguiente paso?"></textarea>
+            <p id="gMsg" class="small"></p>
+            <button class="btn" id="gGuardar">Guardar gestión</button>
+          </form>
+          <div id="gSolo" class="small muted" hidden>Tu perfil es de consulta: ves el estatus y los comentarios, pero no los modificás.</div>
+          <h3 class="hist">Historial</h3>
+          <ol id="gHistorial" class="historial"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="tip" class="tip" hidden></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.99.3/dist/umd/supabase.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="config.js?v=2026103001"></script>
+  <script src="app.js?v=2026103001"></script>
+</body>
+</html>
