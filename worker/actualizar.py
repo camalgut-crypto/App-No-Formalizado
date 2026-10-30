@@ -6,6 +6,7 @@ Uso:
 """
 import argparse
 import logging
+import re
 import sys
 import time as reloj
 from datetime import date, datetime, timedelta
@@ -23,6 +24,7 @@ COLUMNAS = {"Num_Solicitud": "solicitud", "Cliente": "cliente", "Cedula": "cedul
             "Suc_Origen": "suc_origen", "Categorizacion": "categorizacion", "Medio_Captacion": "medio_captacion",
             "Telefono_Cliente": "telefono", "Correo_Cliente": "correo", "Promotor": "promotor"}
 VENTANA_DIAS = 35  # la de la consulta
+PREFIJO_TELEFONO = "73"  # lo necesita la app de marcado: "87897610" → "7387897610"
 
 
 def _valor(v):
@@ -48,7 +50,11 @@ def leer_base(cfg: dict) -> list[dict]:
         raise RuntimeError(f"La consulta ya no trae las columnas {sorted(faltan)}")
     df = df[list(COLUMNAS)].rename(columns=COLUMNAS)
     df["solicitud"] = df["solicitud"].astype("int64")
-    return [{k: _valor(v) for k, v in r.items()} for r in df.to_dict("records")]
+    filas = [{k: _valor(v) for k, v in r.items()} for r in df.to_dict("records")]
+    for f in filas:
+        if f["telefono"]:  # a veces trae varios números ("57522973, 84848284"): el prefijo va en cada uno
+            f["telefono"] = ", ".join(PREFIJO_TELEFONO + t.strip() for t in re.split(r"[,;/]", f["telefono"]) if t.strip())
+    return filas
 
 
 def motivos_salida(cfg: dict, ids: list[int]) -> list[dict]:

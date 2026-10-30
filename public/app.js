@@ -205,7 +205,7 @@ async function abrir(sol) {
   S.abierta = sol;
   $('mKicker').textContent = `Solicitud ${r.solicitud} · ${r.en_base ? 'en la base' : 'salió de la base'}`;
   $('mCliente').textContent = r.cliente || '';
-  const tel = (r.telefono || '').replace(/[^\d+]/g, '');
+  const tel = (r.telefono || '').split(',')[0].replace(/[^\d+]/g, '');  // con varios números se marca el primero
   $('mLlamar').hidden = !tel;
   $('mLlamar').href = `tel:${tel}`;
   $('mLlamar').textContent = `📞 ${r.telefono || ''}`;
